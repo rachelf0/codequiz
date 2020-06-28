@@ -20,6 +20,7 @@ THEN I can save my initials and score
 • JavaScript
 
 # URL
+https://rachelf0.github.io/codequiz/
 
 # Credits
 Made with ❤️ by Rachel Fritz. Shout out to my awesome study group again. Couldn't get through this class without them!
