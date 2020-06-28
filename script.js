@@ -6,8 +6,10 @@ var btn2Elem = document.getElementById("btn-2")
 var btn3Elem = document.getElementById("btn-3")
 
 //use interval timer for the time remaining
-var timeRemaining = 60;
+let timeRemaining = 60;
 var currentQuestion = 0;
+let gameScore = 0;
+let shuffledQuestions, currentQuestionIndex
 
 //Stopwatch
 var myTimer;
