@@ -4,22 +4,22 @@ var btn0Elem = document.getElementById("btn-0")
 var btn1Elem = document.getElementById("btn-1")
 var btn2Elem = document.getElementById("btn-2")
 var btn3Elem = document.getElementById("btn-3")
-var timerElem = document.getElementById("countdown")
+
 //use interval timer for the time remaining
 var timeRemaining = 60;
 var currentQuestion = 0;
-var score = 0;
-    var score = 0;
-    for (var i=0; i < questions; i++) {
-        if(response == questions[i].correct){
-            score++;
-            alert("Correct!");
-        }
-        else {
-            alert("Wrong!");
-        }
+
+//Stopwatch
+var myTimer;
+function clock() {
+    myTimer = setInterval(myClock, 1000);
+    function myClock() {
+        document.getElementById("timer").innerHTML = c--;
+        if (c == 0) {
+        clearInterval(myTimer);
+       }
     }
-    alert("you got " + score + "/" + questions);
+}
 
 var questions = [
     {
@@ -55,6 +55,19 @@ btn0Elem.textContent = questions[currentQuestion].choices
 
 // goes in the on click for the start quiz
 displayTimeElem.textContent = timeRemaining
+
+
+//Stopwatch
+var myTimer;
+function clock() {
+    myTimer = setInterval(myClock, 1000);
+    function myClock() {
+        document.getElementById("timer").innerHTML = c--;
+        if (c == 0) {
+        clearInterval(myTimer);
+       }
+    }
+}
 
 
 
