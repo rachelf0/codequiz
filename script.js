@@ -80,35 +80,60 @@ function selectAnswer(e) {
   })
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
       nextButton.classList.remove('hide')
-  } else {
+  } 
+  else {
       startButton.innerText = 'Restart'
       startButton.classList.remove('hide')
   }
 }
 
-var questions = [
-  {
-    title: "What is the last letter of the alphabet?",
-    choices: ["a", "k", "z", "i"],
-    correct: "z",
-  },
-  {
-    title: "What is the first letter of the alphabet?",
-    choices: ["r", "k", "a", "i"],
-    correct: "a",
-  },
-  {
-    title: "What color is the sky?",
-    choices: ["red", "green", "purple", "blue"],
-    correct: "blue",
-  },
-  {
-    title: "What is 2+2?",
-    choices: ["5", "4", "1", "2"],
-    correct: "4",
-  },
-]
+function setStatusClass(element, correct) {
+    clearStatusClass(element)
+    if (correct) {
+      element.classList.add('correct!')
+      gameScore++;
+      console.log("score is " + gameScore);
+    }
+    else {
+      element.classList.add('wrong!')
+    }
+}
 
+function clearStatusClass(element) {
+  element.classList.remove('correct!')
+  element.classList.remove('wrong!')
+}
+
+const questions = [
+  {
+    question: "What is the last letter of the alphabet?",
+    answers: [
+      { text: 'a', correct: false },
+      { text: 'm', correct: false },
+      { text: 'z', correct: true },
+      { text: 'y', correct: false },
+    ]
+  },
+  {
+    question: "What is the first letter of the alphabet?",
+    answers: [
+      { text: 'a', correct: true },
+      { text: 'm', correct: false },
+      { text: 'z', correct: false },
+      { text: 'y', correct: false },
+    ]
+  },
+  {
+    question: "What color is the sky?",
+    answers: [
+      { text: 'green', correct: false },
+      { text: 'purple', correct: false },
+      { text: 'red', correct: false },
+      { text: 'blue', correct: true },
+    ]
+  },
+  
+  ]
 })
 
 
