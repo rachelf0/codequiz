@@ -5,12 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const questionContainerElement = document.getElementById('question-container')
   const questionElement = document.getElementById('question')
   const answerButtonsElement = document.getElementById('#start-btn')
+  const startBtn = document.querySelector('#start-btn')
   let myVar;
   let timeLeft = 60
   let shuffledQuestions, currentQuestionIndex
   let gameScore = 0;
   
-  startButton.addEventListener('click', function () {
+  startButton.addEventListener('click', function(){
     startGame();
   })
 
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setNextQuestion()
   })
 
-  function updatedCountdown() {
+  function updateCountdown() {
     myVar = setInterval(changeClock, 1000)
     function changeClock () {
       if (timeLeft <= -1) {
@@ -31,7 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
       timeLeft -=1
     }
   }
-})
+
+startBtn.addEventListener('click', updateCountdown)
+
+function startGame() {
+    console.log('started')
+    startButton.classList.add('hide')
+    shuffledQuestions = questions.sort(() => Math.random() - .5)
+    currentQuestionIndex = 0
+    questionContainerElement.classList.remove('hide')
+    setNextQuestion()
+}
 
 var questions = [
   {
@@ -56,6 +67,7 @@ var questions = [
   },
 ]
 
+})
 
 
 
