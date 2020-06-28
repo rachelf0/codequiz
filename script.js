@@ -1,157 +1,193 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const timeLeftDisplay = document.querySelector('#time-left')
-  const startButton = document.getElementById('start-btn')
-  const nextButton = document.getElementById('next-btn')
-  const questionContainerElement = document.getElementById('question-container')
-  const questionElement = document.getElementById('question')
-  const answerButtonsElement = document.getElementById('answer-buttons')
-  const startBtn = document.querySelector('#start-btn')
-  let myVar;
-  let timeLeft = 30
-  let shuffledQuestions, currentQuestionIndex
-  let gameScore = 0;
+// questions
+var questions = [{
+  question: 'What color is the sky?',
+  choiceA: 'Blue',
+  choiceB: 'Purple',
+  choiceC: 'Green',
+  correct: 'A'
+}, {
+  question: "What is the first letter of the alphabet?",
+  choiceA: 'Z',
+  choiceB: 'A',
+  choiceC: 'L',
+  correct: 'B'
+}, {
+  question: 'Who is the current President of the United States?',
+  choiceA: 'Biden',
+  choiceB: 'Obama',
+  choiceC: 'Trump',
+  correct: 'C'
+}, {
+  question: 'What city is the capital of Alabama?',
+  choiceA: 'Birmingham',
+  choiceB: 'Montgomery',
+  choiceC: 'Huntsville',
+  correct: 'B'
+}, {
+  question: 'What is the mascot of Auburn University?',
+  choiceA: 'Elephant',
+  choiceB: 'Blazers',
+  choiceC: 'Tiger',
+  correct: 'C'
+}];
 
-  // const countdownEl = document.getElementById('countdown');
+// global variables
+var start = document.getElementById('start-btn'),
+    startContainer = document.getElementById('start-container'),
+    quiz = document.getElementById('quiz-container'),
+    question = document.getElementById('question'),
+    qImg = document.getElementById('quiz-img'),
+    choiceA = document.getElementById('choice-a'),
+    choiceB = document.getElementById('choice-b'),
+    choiceC = document.getElementById('choice-c'),
+    counter = document.getElementById('counter'),
+    timeGauge = document.getElementById('timeGauge'),
+    progress = document.getElementById('progress'),
+    scoreDiv = document.getElementById('score'),
+    scoreContent = document.getElementById('score-content'),
+    submitBtn = document.getElementById('submit-score'),
+    userName = document.getElementById('user-name'),
+    userScore = 0,
+    highScoreDiv = document.getElementById('high-score-container'),
+    runningQuestion = 0,
+    count = 0,
+    users = [],
+    questionTime = 15, // 15s
+    lastQuestion = questions.length - 1,
+    gaugeWidth = 150, // 150px
+    gaugeUnit = gaugeWidth / questionTime,
+    score = 0;
+let TIMER;
 
-  startButton.addEventListener('click', function(){
-       startGame();
-  })
-  
-  // startButton.addEventListener('click', updateCountdown)
-  nextButton.addEventListener('click', () => {
-      currentQuestionIndex++
-      setNextQuestion()
-  })
+start.addEventListener("click", startQuiz);
+if (localStorage.getItem('users')) {
+  users = JSON.parse(localStorage.getItem('users'));
+}
 
-  function updateCountdown() {
-       myVar = setInterval(changeClock, 1000) 
-      function changeClock() {
-          if (timeLeft <= -1) {
-              timeLeft = 5;
-              return clearInterval(myVar) 
-          }
-          console.log(timeLeft);
-          timeLeftDisplay.innerHTML = timeLeft
-          timeLeft -=1
-      }
+// start quiz
+function startQuiz() {
+  startContainer.classList.add('d-none');
+  quiz.classList.remove('d-none');
+  renderQuestion();
+  renderProgress();
+  renderCounter();
+  TIMER = setInterval(renderCounter, 1000); // 1000ms = 1s
+}
+
+// render a question
+function renderQuestion() {
+  var q = questions[runningQuestion];
+
+  question.innerHTML = q.question;
+  qImg.src = q.imgSrc;
+  choiceA.textContent = q.choiceA;
+  choiceB.textContent = q.choiceB;
+  choiceC.textContent = q.choiceC;
+}
+
+// render progress
+function renderProgress() {
+  for (let qIndex = 0; qIndex <= lastQuestion; qIndex++) {
+    progress.innerHTML += "<div class='prog' id=" + qIndex + "></div>";
   }
+}
 
-  
-  
-  startBtn.addEventListener('click', updateCountdown)
-
-  
-
-  function startGame() {
-      console.log('started')
-      startButton.classList.add('hide')
-      shuffledQuestions = questions.sort(() => Math.random() - .5)
-      currentQuestionIndex = 0
-      questionContainerElement.classList.remove('hide')
-      setNextQuestion()
-
+// counter render
+function renderCounter() {
+  if (count <= questionTime) {
+    counter.textContent = count;
+    timeGauge.style.width = count * gaugeUnit + "px";
+    count++
+  } else {
+    count = 0;
+    // change progress color to red
+    answerIsWrong();
+    if (runningQuestion < lastQuestion) {
+      runningQuestion++;
+      renderQuestion();
+    } else {
+      // end the quiz and show the score
+      clearInterval(TIMER);
+      scoreRender();
+    }
   }
+}
 
-  function setNextQuestion() {
-      resetState()
-      showQuestion(shuffledQuestions[currentQuestionIndex])
+// checkAnwer
+function checkAnswer(answer) {
+  if (answer == questions[runningQuestion].correct) {
+    // answer is correct
+    score++;
+    // change progress color to green
+    answerIsCorrect();
+  } else {
+    // answer is wrong
+    // change progress color to red
+    answerIsWrong();
   }
-
-  function showQuestion(question) {
-      questionElement.innerText = question.question
-      question.answers.forEach(answer => {
-          const button = document.createElement('button')
-          button.innerText = answer.text
-          button.classList.add('btn')
-          if (answer.correct) {
-              button.dataset.correct = answer.correct
-          }
-          button.addEventListener('click', selectAnswer)
-          answerButtonsElement.appendChild(button)
-      })
+  count = 0;
+  if (runningQuestion < lastQuestion) {
+    runningQuestion++;
+    renderQuestion();
+  } else {
+    // end the quiz and show the score
+    clearInterval(TIMER);
+    scoreRender();
   }
+}
 
-  function resetState() {
-      clearStatusClass(document.body)
-      nextButton.classList.add('hide')
-      while (answerButtonsElement.firstChild) {
-          answerButtonsElement.removeChild(answerButtonsElement.firstChild)
-      }
+// answer is correct
+function answerIsCorrect() {
+  document.getElementById(runningQuestion).classList.add('correct');
+}
 
+// answer is Wrong
+function answerIsWrong() {
+  document.getElementById(runningQuestion).classList.add('incorrect');
+}
+
+// score render
+function scoreRender(userscore) {
+  quiz.classList.add('d-none');
+  scoreDiv.classList.remove('d-none');
+
+  // calculate the amount of question percent answered by the user
+  userScore = Math.round(100 * score / questions.length);
+
+  // return userScore;
+
+  scoreContent.textContent = 'You scored ' + userScore + '%!';
+}
+
+
+submitBtn.addEventListener('click', function(event) {
+  event.prevendDefault;
+
+  var user = {
+    userName: userName.value.trim().toUpperCase(),
+    score: userScore.toString()
+  };
+
+  users.push(user);
+
+  // users.sort(function(a, b) {
+  //   return parseFloat(a.score) - parseFloat(b.score);
+  // });
+
+  localStorage.setItem('users', JSON.stringify(users));
+
+  scoreDiv.classList.add('d-none');
+
+  highScoreDiv.classList.remove('d-none');
+
+  for (var i = 0; i < users.length; i++) {
+
+    var highScoreList = document.querySelector('ul');
+
+    var li = document.createElement('li');
+
+    li.textContent = `${users[i].userName}: ${users[i].score}`;
+
+    highScoreList.append(li);
   }
-
-  function selectAnswer(e) {
-      const selectedButton = e.target
-      const correct = selectedButton.dataset.correct
-      setStatusClass(document.body, correct)
-      Array.from(answerButtonsElement.children).forEach(button => {
-          setStatusClass(button, button.dataset.correct)
-      })
-      if (shuffledQuestions.length > currentQuestionIndex + 1) {
-          nextButton.classList.remove('hide')
-      } else {
-          startButton.innerText = 'Restart'
-          startButton.classList.remove('hide')
-      }
-
-  }
-
-  function setStatusClass(element, correct) {
-      clearStatusClass(element)
-      if (correct) {
-          element.classList.add('correct')
-          gameScore++;
-          console.log("score is " + gameScore);
-      } else {
-          element.classList.add('wrong')
-          // debugger;
-      }
-  }
-
-  function clearStatusClass(element) {
-      element.classList.remove('correct')
-      element.classList.remove('wrong')
-  }
-
-const questions = [
-  {
-    question: "What is the last letter of the alphabet?",
-    answers: [
-      { text: 'a', correct: false },
-      { text: 'm', correct: false },
-      { text: 'z', correct: true },
-      { text: 'y', correct: false },
-    ]
-  },
-  {
-    question: "What is the first letter of the alphabet?",
-    answers: [
-      { text: 'a', correct: true },
-      { text: 'm', correct: false },
-      { text: 'z', correct: false },
-      { text: 'y', correct: false },
-    ]
-  },
-  {
-    question: "What color is the sky?",
-    answers: [
-      { text: 'green', correct: false },
-      { text: 'purple', correct: false },
-      { text: 'red', correct: false },
-      { text: 'blue', correct: true },
-    ]
-  },
-  {
-    question: "What is 2+2?",
-    answers: [
-      { text: '5', correct: false },
-      { text: '2', correct: false },
-      { text: '6', correct: false },
-      { text: '4', correct: true },
-    ]
-  },
-  ]
-})
-
-
-
+});

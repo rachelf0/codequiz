@@ -7,22 +7,78 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2 id="countdown">Seconds left: <span id="time-left">60</span></h2>
-    <div class="container">
-        <div id="question-container" class="hide">
-            <div id="question">Question</div>
-            <div id="answer-buttons" class="btn-grid">
-                <button class="btn">Answer 1</button>
-                <button class="btn">Answer 2</button>
-                <button class="btn">Answer 3</button>
-                <button class="btn">Answer 4</button>
+
+    <div class="w-100 vh-100  d-flex justify-content-center">
+        <div class="container-fluid h-100">
+          <div class="row h-100">
+            <div class="col-sm-8 quiz-col mx-auto h-25" id="start-container">
+              <div class="row">
+                <div class="col-sm-12 text-center">
+                  <h2 class="mb-3">You will have 15 seconds to answer each question.</h2>
+                  <button class="btn btn-primary btn-lg mx-auto" id="start-btn">Start Quiz!</button>
+                </div>
+              </div>
+    
             </div>
+            <div class="col-sm-8 quiz-col mx-auto h-75 d-none" id="quiz-container">
+              <div class="row">
+                <div class="col-sm-4 mb-2 mx-auto">
+                  <img class="img-fluid" id="quiz-img" src="" alt="">
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-sm-12 d-flex justify-content-center">
+                  <h2 id="question"></h2>
+                </div>
+              </div>
+              <div class="row d-flex justify-content-center question-row">
+                <div class="col-sm-3 choice-col">
+                  <a class="choice" id="choice-a" onclick="checkAnswer('A')"></a>
+                </div>
+                <div class="col-sm-3 choice-col">
+                  <a class="choice" id="choice-b" onclick="checkAnswer('B')"></a>
+                </div>
+                <div class="col-sm-3 choice-col">
+                  <a class="choice" id="choice-c" onclick="checkAnswer('C')"></a>
+                </div>
+              </div>
+              <div class="row d-flex flex-row flex-wrap justify-content-between">
+                <div id="timer">
+                  <div id="counter"></div>
+                  <div id="btimeGauge"></div>
+                  <div id="timeGauge"></div>
+                </div>
+                <div id="progress"></div>
+              </div>
+            </div>
+            <div class="col-sm-8 quiz-col h-50 mx-auto d-none" id="score">
+              <div class="row">
+                <div class="col-sm-12 text-center">
+                  <h2 class="mb-3" id="score-content"></h2>
+                </div>
+                <div class="col-sm-6 mx-auto text-center">
+                  <p class="lead">Enter your name to record your score!</p>
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Enter your initials" id="user-name">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button" id="submit-score">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-8 quiz-col h-50 mx-auto d-none" id="high-score-container">
+              <div class="row">
+                <div class="col-sm-12 text-center">
+                  <h2 class="mb-3">High Scores</h2>
+                  <ul>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="controls">
-            <button id="start-btn" class="start-btn btn">Start</button>
-            <button id="next-btn" class="start-btn btn hide">Next</button>
-        </div>
-    </div>
+      </div>
 
     <script src="script.js"></script>
 </body>
